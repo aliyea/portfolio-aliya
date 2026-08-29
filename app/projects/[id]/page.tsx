@@ -373,7 +373,6 @@ export default function ProjectDetailPage() {
             paddingRight: "20px",
             flexDirection: "column",
             justifyContent: "space-between",
-            position: "relative",
             zIndex: 10,
             pointerEvents: "auto",
           }}

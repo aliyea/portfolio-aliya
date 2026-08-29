@@ -569,7 +569,6 @@ export default function PortfolioDesktop() {
             paddingRight: "20px", 
             flexDirection: "column",
             justifyContent: "space-between",
-            position: "relative",
             zIndex: 10,
             pointerEvents: "auto",
           }}

@@ -1,0 +1,824 @@
+\
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aliya</title>
+
+  <style>
+    :root {
+      --paper: #fff9f3;
+      --text: #53233a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      color: var(--text);
+      background:
+        radial-gradient(
+          circle at 18% 20%,
+          rgba(239, 168, 193, 0.28),
+          transparent 28%
+        ),
+        radial-gradient(
+          circle at 82% 78%,
+          rgba(255, 202, 167, 0.30),
+          transparent 25%
+        ),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .hero {
+      position: relative;
+      width: min(1100px, 96vw);
+      text-align: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.3rem;
+      font-size: clamp(0.65rem, 1.2vw, 0.82rem);
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+
+    h1 {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: min(50vw, 460px);
+      min-height: 250px;
+      cursor: crosshair;
+      touch-action: none;
+      image-rendering: pixelated;
+      filter: drop-shadow(
+        0 13px 16px rgba(86, 31, 56, 0.10)
+      );
+    }
+
+    .hint {
+      margin: 0.2rem 0 0;
+      font-size: clamp(0.72rem, 1.3vw, 0.9rem);
+      letter-spacing: 0.04em;
+      opacity: 0.58;
+    }
+
+    .pill {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid rgba(92, 42, 62, 0.16);
+      border-radius: 999px;
+      color: inherit;
+      background: rgba(255, 255, 255, 0.55);
+      backdrop-filter: blur(10px);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hint::after {
+        content: " — animasi dikurangi";
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="pill">portfolio / 2026</div>
+
+  <main class="hero">
+    <p class="eyebrow">creative portfolio</p>
+
+    <h1>Aliya</h1>
+
+    <canvas
+      id="pixel-name"
+      aria-label="Tulisan Aliya bergaya pixel interaktif">
+    </canvas>
+
+    <p class="hint">
+      gerakkan cursor untuk menyentuh pixel · klik untuk ganti warna
+    </p>
+  </main>
+
+  <script>
+    const canvas =
+      document.querySelector("#pixel-name");
+
+    const ctx =
+      canvas.getContext("2d");
+
+    const reduced =
+      matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+
+    /* =========================
+       PIXEL GRID
+    ========================= */
+
+    const GRID_COLUMNS = 76;
+    const GRID_ROWS = 18;
+
+    /*
+      Huruf dibuat manual sebagai bitmap.
+      Ini membuat ALIYA selalu terbaca jelas
+      dan tidak bergantung pada bentuk font.
+    */
+    const LETTERS = {
+      A: [
+        "0011100",
+        "0100010",
+        "1000001",
+        "1000001",
+        "1111111",
+        "1000001",
+        "1000001",
+        "1000001",
+        "1000001"
+      ],
+
+      L: [
+        "1000000",
+        "1000000",
+        "1000000",
+        "1000000",
+        "1000000",
+        "1000000",
+        "1000000",
+        "1000000",
+        "1111111"
+      ],
+
+      I: [
+        "1111111",
+        "0001000",
+        "0001000",
+        "0001000",
+        "0001000",
+        "0001000",
+        "0001000",
+        "0001000",
+        "1111111"
+      ],
+
+      Y: [
+        "1000001",
+        "1000001",
+        "0100010",
+        "0100010",
+        "0010100",
+        "0001000",
+        "0001000",
+        "0001000",
+        "0001000"
+      ]
+    };
+
+    const WORD = "ALIYA";
+    const LETTER_WIDTH = 7;
+    const LETTER_HEIGHT = 9;
+    const LETTER_GAP = 3;
+
+
+    /* =========================
+       COLOR PALETTES
+    ========================= */
+
+    const palettes = [
+      {
+        main: "#595959",
+        light: "#747474",
+        dark: "#414141"
+      },
+      {
+        main: "#9f315e",
+        light: "#c9527e",
+        dark: "#772143"
+      },
+      {
+        main: "#536b8f",
+        light: "#7189ad",
+        dark: "#3c506f"
+      },
+      {
+        main: "#58765d",
+        light: "#76907a",
+        dark: "#405b45"
+      }
+    ];
+
+    let paletteIndex = 0;
+    let pixels = [];
+
+    let grid = {
+      cell: 10,
+      left: 0,
+      top: 0,
+      width: 0,
+      height: 0
+    };
+
+    let pointer = {
+      x: -9999,
+      y: -9999,
+      active: false
+    };
+
+    let animationTime = 0;
+
+
+    /* =========================
+       RESIZE CANVAS
+    ========================= */
+
+    function resize() {
+      const rect =
+        canvas.getBoundingClientRect();
+
+      const dpr =
+        Math.min(
+          window.devicePixelRatio || 1,
+          2
+        );
+
+      canvas.width =
+        Math.round(
+          rect.width * dpr
+        );
+
+      canvas.height =
+        Math.round(
+          rect.height * dpr
+        );
+
+      ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+      );
+
+      ctx.imageSmoothingEnabled = false;
+
+      buildPixels(
+        rect.width,
+        rect.height
+      );
+    }
+
+
+    /* =========================
+       BUILD WORD
+    ========================= */
+
+    function buildPixels(
+      canvasWidth,
+      canvasHeight
+    ) {
+      /*
+        Dibulatkan supaya garis grid dan kotak
+        tetap tajam, tidak blur.
+      */
+      const cell =
+        Math.max(
+          3,
+          Math.floor(
+            Math.min(
+              canvasWidth /
+                (GRID_COLUMNS + 2),
+              canvasHeight /
+                (GRID_ROWS + 3)
+            )
+          )
+        );
+
+      const gridWidth =
+        GRID_COLUMNS * cell;
+
+      const gridHeight =
+        GRID_ROWS * cell;
+
+      grid = {
+        cell,
+        width: gridWidth,
+        height: gridHeight,
+        left: Math.round(
+          (canvasWidth - gridWidth) / 2
+        ),
+        top: Math.round(
+          (canvasHeight - gridHeight) / 2
+        )
+      };
+
+      const wordWidth =
+        WORD.length * LETTER_WIDTH +
+        (WORD.length - 1) * LETTER_GAP;
+
+      const startColumn =
+        Math.floor(
+          (GRID_COLUMNS - wordWidth) / 2
+        );
+
+      const startRow =
+        Math.floor(
+          (GRID_ROWS - LETTER_HEIGHT) / 2
+        );
+
+      pixels = [];
+
+      let cursorColumn =
+        startColumn;
+
+      for (
+        const letter of WORD
+      ) {
+        const pattern =
+          LETTERS[letter];
+
+        pattern.forEach(
+          (rowPattern, row) => {
+            [...rowPattern].forEach(
+              (value, column) => {
+                if (value !== "1") {
+                  return;
+                }
+
+                const gridColumn =
+                  cursorColumn + column;
+
+                const gridRow =
+                  startRow + row;
+
+                const x =
+                  grid.left +
+                  (gridColumn + 0.5) *
+                    cell;
+
+                const y =
+                  grid.top +
+                  (gridRow + 0.5) *
+                    cell;
+
+                pixels.push({
+                  x,
+                  y,
+                  ox: x,
+                  oy: y,
+                  row: gridRow,
+                  column: gridColumn,
+                  size: cell * 0.82,
+                  scale: 1,
+                  phase:
+                    (
+                      gridColumn * 0.67 +
+                      gridRow * 0.41
+                    ) %
+                    (Math.PI * 2)
+                });
+              }
+            );
+          }
+        );
+
+        cursorColumn +=
+          LETTER_WIDTH +
+          LETTER_GAP;
+      }
+    }
+
+
+    /* =========================
+       DRAW BACKGROUND GRID
+    ========================= */
+
+    function drawGrid() {
+      const {
+        cell,
+        left,
+        top,
+        width,
+        height
+      } = grid;
+
+      ctx.save();
+
+      ctx.fillStyle =
+        "rgba(255,255,255,0.18)";
+
+      ctx.fillRect(
+        left,
+        top,
+        width,
+        height
+      );
+
+      ctx.strokeStyle =
+        "rgba(120,91,76,0.09)";
+
+      ctx.lineWidth = 1;
+
+      for (
+        let column = 0;
+        column <= GRID_COLUMNS;
+        column++
+      ) {
+        const x =
+          left +
+          column * cell +
+          0.5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          x,
+          top
+        );
+
+        ctx.lineTo(
+          x,
+          top + height
+        );
+
+        ctx.stroke();
+      }
+
+      for (
+        let row = 0;
+        row <= GRID_ROWS;
+        row++
+      ) {
+        const y =
+          top +
+          row * cell +
+          0.5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          left,
+          y
+        );
+
+        ctx.lineTo(
+          left + width,
+          y
+        );
+
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle =
+        "rgba(92,42,62,0.10)";
+
+      ctx.strokeRect(
+        left + 0.5,
+        top + 0.5,
+        width,
+        height
+      );
+
+      ctx.restore();
+    }
+
+
+    /* =========================
+       DRAW ONE PIXEL
+    ========================= */
+
+    function drawPixel(pixel) {
+      const dx =
+        pixel.ox -
+        pointer.x;
+
+      const dy =
+        pixel.oy -
+        pointer.y;
+
+      const distance =
+        Math.hypot(
+          dx,
+          dy
+        );
+
+      const radius =
+        grid.cell * 5.5;
+
+      let hover = 0;
+
+      if (
+        pointer.active &&
+        distance < radius
+      ) {
+        hover =
+          1 -
+          distance / radius;
+      }
+
+      const nx =
+        distance > 0
+          ? dx / distance
+          : 0;
+
+      const ny =
+        distance > 0
+          ? dy / distance
+          : 0;
+
+      /*
+        Gerak dibuat kecil supaya bentuk huruf
+        tidak rusak saat disentuh cursor.
+      */
+      const push =
+        hover *
+        grid.cell *
+        0.55;
+
+      const wobble =
+        reduced
+          ? 0
+          : Math.sin(
+              animationTime * 0.0015 +
+              pixel.phase
+            ) *
+            grid.cell *
+            0.015;
+
+      const targetX =
+        pixel.ox +
+        nx * push +
+        wobble;
+
+      const targetY =
+        pixel.oy +
+        ny * push;
+
+      const targetScale =
+        1 +
+        hover * 0.12;
+
+      pixel.x +=
+        (
+          targetX -
+          pixel.x
+        ) *
+        0.15;
+
+      pixel.y +=
+        (
+          targetY -
+          pixel.y
+        ) *
+        0.15;
+
+      pixel.scale +=
+        (
+          targetScale -
+          pixel.scale
+        ) *
+        0.15;
+
+      const palette =
+        palettes[
+          paletteIndex
+        ];
+
+      const size =
+        pixel.size *
+        pixel.scale;
+
+      const left =
+        Math.round(
+          pixel.x -
+          size / 2
+        );
+
+      const top =
+        Math.round(
+          pixel.y -
+          size / 2
+        );
+
+      const roundedSize =
+        Math.max(
+          2,
+          Math.round(size)
+        );
+
+      /*
+        Bayangan pixel.
+      */
+      ctx.fillStyle =
+        "rgba(44,34,38,0.16)";
+
+      ctx.fillRect(
+        left + 1,
+        top + 2,
+        roundedSize,
+        roundedSize
+      );
+
+      /*
+        Warna utama.
+      */
+      ctx.fillStyle =
+        palette.main;
+
+      ctx.fillRect(
+        left,
+        top,
+        roundedSize,
+        roundedSize
+      );
+
+      /*
+        Highlight bagian atas dan kiri.
+      */
+      const edge =
+        Math.max(
+          1,
+          Math.round(
+            roundedSize * 0.11
+          )
+        );
+
+      ctx.fillStyle =
+        hover > 0.15
+          ? palette.light
+          : "rgba(255,255,255,0.16)";
+
+      ctx.fillRect(
+        left,
+        top,
+        roundedSize,
+        edge
+      );
+
+      ctx.fillRect(
+        left,
+        top,
+        edge,
+        roundedSize
+      );
+
+      /*
+        Sisi bawah dan kanan.
+      */
+      ctx.fillStyle =
+        palette.dark;
+
+      ctx.globalAlpha = 0.22;
+
+      ctx.fillRect(
+        left,
+        top +
+          roundedSize -
+          edge,
+        roundedSize,
+        edge
+      );
+
+      ctx.fillRect(
+        left +
+          roundedSize -
+          edge,
+        top,
+        edge,
+        roundedSize
+      );
+
+      ctx.globalAlpha = 1;
+    }
+
+
+    /* =========================
+       RENDER
+    ========================= */
+
+    function render(
+      time = 0
+    ) {
+      animationTime =
+        time;
+
+      const width =
+        canvas.clientWidth;
+
+      const height =
+        canvas.clientHeight;
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      drawGrid();
+
+      pixels.forEach(
+        drawPixel
+      );
+
+      requestAnimationFrame(
+        render
+      );
+    }
+
+
+    /* =========================
+       POINTER
+    ========================= */
+
+    function updatePointer(
+      event
+    ) {
+      const rect =
+        canvas.getBoundingClientRect();
+
+      pointer.x =
+        event.clientX -
+        rect.left;
+
+      pointer.y =
+        event.clientY -
+        rect.top;
+
+      pointer.active = true;
+    }
+
+    canvas.addEventListener(
+      "pointermove",
+      updatePointer
+    );
+
+    canvas.addEventListener(
+      "pointerenter",
+      updatePointer
+    );
+
+    canvas.addEventListener(
+      "pointerleave",
+      () => {
+        pointer.active = false;
+      }
+    );
+
+    canvas.addEventListener(
+      "pointerdown",
+      event => {
+        updatePointer(event);
+
+        paletteIndex =
+          (
+            paletteIndex + 1
+          ) %
+          palettes.length;
+      }
+    );
+
+
+    /* =========================
+       START
+    ========================= */
+
+    window.addEventListener(
+      "resize",
+      resize
+    );
+
+    resize();
+
+    requestAnimationFrame(
+      render
+    );
+  </script>
+</body>
+</html>

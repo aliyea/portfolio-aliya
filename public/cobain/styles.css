@@ -1,0 +1,77 @@
+/* Mengatur layar dan posisi ke tengah */
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f4f4f4; 
+  transition: background-color 0.4s ease;
+  font-family: sans-serif;
+}
+
+/* Mengatur kotak radio button di atas */
+#radio-group {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 15px;
+}
+
+/* BIKIN KANVAS PIXEL ART (Kunci Utamanya Di Sini) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(76, 12px); /* 76 kolom, ukuran pixel 12px */
+  grid-template-rows: repeat(17, 12px);    /* 17 baris */
+  /* gap: 1px; Hapus tanda komentar di awal baris ini kalau kamu mau lihat batas kotak-kotaknya */
+}
+
+/* Warna dasar kotak kosong */
+.cell {
+  background-color: transparent; 
+}
+
+/* WARNA TEMA DEFAULT */
+.black {
+  background-color: #000000;
+}
+
+/* --- WARNA TEMA TAMBAHAN --- */
+
+/* Tema Gothic */
+body.gothic {
+  background-color: #1a1a1a;
+}
+body.gothic .black {
+  background-color: #8b0000; /* Merah gelap */
+}
+
+/* Tema Chrome (Sedikit efek kilap buatan) */
+body.chrome {
+  background-color: #e0e5ec;
+}
+body.chrome .black {
+  background-color: #a8b2c1;
+  box-shadow: inset 2px 2px 4px rgba(255,255,255,0.8), inset -2px -2px 4px rgba(0,0,0,0.2);
+}
+
+/* Tema Barbie */
+body.barbie {
+  background-color: #ffe4e1;
+}
+body.barbie .black {
+  background-color: #ff1493; /* Pink khas barbie */
+}
+/* Transisi dasar biar perubahannya halus */
+.cell {
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Efek saat kursor menyentuh kotak */
+.cell:hover {
+  border-radius: 50%; /* Mengubah kotak jadi lingkaran bulat */
+  transform: scale(1.3); /* Sedikit membesar saat disentuh */
+  box-shadow: 0 0 8px rgba(13, 92, 222, 0.6); /* Kasih efek glow tipis */
+  z-index: 10; /* Biar lingkarannya nggak tertumpuk kotak lain */
+}

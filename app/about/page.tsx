@@ -291,18 +291,17 @@ export default function AboutPage() {
 
       <div className="about-container">
         
-        {/* DESKTOP SIDEBAR */}
+{/* DESKTOP SIDEBAR */}
         <div
           className="about-sidebar"
           style={{
-            position: "sticky",
+            position: "sticky", 
             top: "40px",
             alignSelf: "start",
             height: "calc(100vh - 80px)",
             paddingRight: "20px",
             flexDirection: "column",
             justifyContent: "space-between",
-            position: "relative",
             zIndex: 10,
             pointerEvents: "auto",
           }}

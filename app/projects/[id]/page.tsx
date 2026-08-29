@@ -142,7 +142,8 @@ export default function ProjectDetailPage() {
   const id = params?.id as string;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
-  const project = PROJECTS_DATA.find(
+  // Menambahkan tipe ": any" di sini untuk menyelesaikan TS Error 2339
+  const project: any = PROJECTS_DATA.find(
     (p: any) =>
       p.id?.toString().toLowerCase() === id?.toLowerCase() ||
       p.title?.toLowerCase().replace(/\s+/g, "-") === id?.toLowerCase()
@@ -491,9 +492,9 @@ export default function ProjectDetailPage() {
           >
             {project.context && <p style={{ margin: 0 }}>{project.context}</p>}
 
-            {project.process && project.process.length > 0 && (
+            {project.process && (project.process as any)?.length > 0 && (
               <p style={{ margin: 0, whiteSpace: "pre-line" }}>
-                {project.process.join(" ")}
+                {(project.process as any).join(" ")}
               </p>
             )}
           </div>

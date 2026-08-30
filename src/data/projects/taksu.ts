@@ -19,7 +19,7 @@ export const taksuProject = {
       label: "Click to see full website"
     },
     {
-      url: "/Taksu_Guide.pdf",
+      url: "/documentation",
       label: "Click to see documentation"
     }
   ],

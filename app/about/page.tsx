@@ -501,7 +501,7 @@ export default function AboutPage() {
                   color: "#3a3a3a",
                   textDecoration: "underline",
                   textDecorationThickness: "1px",
-                  textUnderlineOffset: "3px",
+                  textUnderlineOffset: "1px",
                   letterSpacing: "-0.3px",
                 }}
               >
@@ -511,14 +511,14 @@ export default function AboutPage() {
 
             <div>
               <a
-                href="/Aliya_Resume.pdf"
+                href="/resume"
                 target="_blank"
                 rel="noreferrer"
                 style={{
                   color: "#3a3a3a",
                   textDecoration: "underline",
                   textDecorationThickness: "1px",
-                  textUnderlineOffset: "3px",
+                  textUnderlineOffset: "1px",
                   letterSpacing: "-0.3px",
                 }}
               >

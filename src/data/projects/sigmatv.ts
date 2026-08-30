@@ -5,11 +5,11 @@ export const sigmaProject = {
   period: "Nov 2025 – Jun 2026", 
   
   // Paragraf 1
-  context: "A full-stack web solution built to replace Taksu Book Cafe’s manual workflows previously managed through Notion and Excel. The project consists of two web applications: a customer-facing platform and an admin & librarian system for managing day-to-day operations.",
+  context: "A solo freelance project for SIGMA TV UNJ, independently handled from the initial client communication and requirements gathering through to the final website launch.",
   
 
   process: [
-    "The development covered database architecture, authentication flows, and full-stack implementation using Next.js, React, and Supabase, along with documentation designed to help non-technical staff operate the system independently."
+    "The project involved translating client needs into technical specifications, building a responsive website from structure to final design, and conducting testing and refinements to ensure everything was ready before launch.",
   ],
   
   tech: ["Web Design", "Web Development "],
@@ -24,7 +24,6 @@ export const sigmaProject = {
     "/projects/sigma/3.png",
     "/projects/sigma/4.png",
     "/projects/sigma/5.png",
-    "/projects/sigma/6.png",
     "/projects/sigma/7.png",
   ],
 

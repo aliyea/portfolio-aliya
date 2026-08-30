@@ -111,6 +111,11 @@ body {
 
 /* KHUSUS HP (Layar di bawah 768px) */
 @media (max-width: 768px) {
+  .project-wrapper {
+    /* FIX: Mencegah bug background-attachment fixed di browser HP yang bikin gambar kertas ngezoom parah */
+    background-attachment: scroll !important;
+  }
+
   .project-container {
     grid-template-columns: 1fr;
     /* Pangkas spasi kosong, padding atas di-0 kan biar konten langsung naik */
@@ -142,7 +147,6 @@ export default function ProjectDetailPage() {
   const id = params?.id as string;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
-  // Menambahkan tipe ": any" di sini untuk menyelesaikan TS Error 2339
   const project: any = PROJECTS_DATA.find(
     (p: any) =>
       p.id?.toString().toLowerCase() === id?.toLowerCase() ||
@@ -166,6 +170,7 @@ export default function ProjectDetailPage() {
   if (!project) {
     return (
       <div
+        className="project-wrapper"
         style={{
           backgroundColor: "#dcc9da",
           backgroundImage: paperUrl ? `url("${paperUrl}")` : "none",
@@ -200,6 +205,7 @@ export default function ProjectDetailPage() {
 
   return (
     <div
+      className="project-wrapper"
       style={{
         backgroundColor: "#dcc9da",
         backgroundImage: paperUrl ? `url("${paperUrl}")` : "none",
@@ -520,7 +526,7 @@ export default function ProjectDetailPage() {
                       color: "#3a3a3a",
                       textDecoration: "underline",
                       textDecorationThickness: "1px",
-                      textUnderlineOffset: "3px",
+                      textUnderlineOffset: "1px",
                       letterSpacing: "-0.3px",
                     }}
                   >
@@ -540,11 +546,11 @@ export default function ProjectDetailPage() {
                         color: "#3a3a3a",
                         textDecoration: "underline",
                         textDecorationThickness: "1px",
-                        textUnderlineOffset: "3px",
+                        textUnderlineOffset: "1px",
                         letterSpacing: "-0.3px",
                       }}
                     >
-                      {project.links.label || "Click to see the live site"}
+                      {project.links.label || "Click to see full website"}
                     </a>
                   </div>
                 )}
@@ -559,7 +565,7 @@ export default function ProjectDetailPage() {
                         color: "#3a3a3a",
                         textDecoration: "underline",
                         textDecorationThickness: "1px",
-                        textUnderlineOffset: "0.8px",
+                        textUnderlineOffset: "1px",
                         letterSpacing: "-0.1px",
                       }}
                     >

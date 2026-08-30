@@ -7,22 +7,59 @@ export default function ResumePage() {
         left: 0, 
         width: "100vw", 
         height: "100vh", 
-        margin: 0, 
-        padding: 0,
-        overflow: "hidden",
-        backgroundColor: "#323639" 
+        backgroundColor: "#323639",
+        display: "flex",
+        flexDirection: "column"
       }}
     >
-      <iframe
-        src="/Aliya_resume.pdf" 
+      <div 
         style={{ 
-          width: "100%", 
-          height: "100%", 
-          border: "none", 
-          display: "block" 
+          display: "flex", 
+          justifyContent: "space-between", 
+          alignItems: "center", 
+          padding: "12px 20px",
+          backgroundColor: "#202124",
+          borderBottom: "1px solid #45474a"
         }}
-        title="Aliya Raihana - Resume"
-      />
+      >
+        <div style={{ color: "#fff", fontFamily: "'Helvetica', sans-serif", fontSize: "14px", fontWeight: "bold" }}>
+          Resume - Aliya Raihana
+        </div>
+        <a 
+          // JANGAN LUPA GANTI NAMA FILE DI BAWAH INI
+          href="/Aliya_resume.pdf" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{ 
+            backgroundColor: "#e8eaed", 
+            color: "#202124", 
+            padding: "8px 16px", 
+            borderRadius: "4px", 
+            textDecoration: "none", 
+            fontFamily: "'Helvetica', sans-serif", 
+            fontSize: "13px", 
+            fontWeight: "bold" 
+          }}
+        >
+          Buka Full PDF
+        </a>
+      </div>
+
+      <div style={{ flex: 1, width: "100%", position: "relative", WebkitOverflowScrolling: "touch" }}>
+        <iframe
+          // JANGAN LUPA GANTI NAMA FILE DI BAWAH INI
+          src="/Aliya_resume.pdf" 
+          style={{ 
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%", 
+            height: "100%", 
+            border: "none"
+          }}
+          title="Resume"
+        />
+      </div>
     </div>
   );
 }

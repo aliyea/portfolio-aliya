@@ -112,13 +112,30 @@ body {
 /* KHUSUS HP (Layar di bawah 768px) */
 @media (max-width: 768px) {
   .project-wrapper {
-    /* FIX: Mencegah bug background-attachment fixed di browser HP yang bikin gambar kertas ngezoom parah */
-    background-attachment: scroll !important;
+    /* FIX: Matikan gambar background asli biar gak ditarik sama browser HP */
+    background-image: none !important; 
+  }
+
+  /* Bikin layer background fiktif di belakang layar khusus HP. Ukurannya dikunci pas 1 layar (100vh) */
+  .project-wrapper::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-color: #dcc9da;
+    background-image: var(--bg-image);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: lighten;
+    pointer-events: none;
   }
 
   .project-container {
     grid-template-columns: 1fr;
-    /* Pangkas spasi kosong, padding atas di-0 kan biar konten langsung naik */
     padding: 0px 20px 40px; 
     gap: 24px;
   }
@@ -127,13 +144,12 @@ body {
     display: none !important; 
   }
 
-  /* Header 3 Titik: FIXED biar freeze di layar pas di-scroll */
   .project-mobile-header {
     display: flex !important;
     position: fixed !important; 
     top: 20px;
     right: 20px;
-    z-index: 50; /* Z-index digedein biar selalu di atas gambar/teks */
+    z-index: 50; 
   }
 
   .project-images-grid {
@@ -167,11 +183,12 @@ export default function ProjectDetailPage() {
     };
   }, []);
 
-  if (!project) {
+if (!project) {
     return (
       <div
         className="project-wrapper"
         style={{
+          "--bg-image": paperUrl ? `url("${paperUrl}")` : "none",
           backgroundColor: "#dcc9da",
           backgroundImage: paperUrl ? `url("${paperUrl}")` : "none",
           backgroundRepeat: "no-repeat",
@@ -187,7 +204,7 @@ export default function ProjectDetailPage() {
           fontFamily: "'Helvetica', sans-serif",
           gap: "16px",
           color: "#3a3a3a",
-        }}
+        } as React.CSSProperties}
       >
         <div style={{ fontSize: "20px" }}>Project tidak ditemukan.</div>
         <Link
@@ -207,6 +224,7 @@ export default function ProjectDetailPage() {
     <div
       className="project-wrapper"
       style={{
+        "--bg-image": paperUrl ? `url("${paperUrl}")` : "none",
         backgroundColor: "#dcc9da",
         backgroundImage: paperUrl ? `url("${paperUrl}")` : "none",
         backgroundRepeat: "no-repeat",
@@ -220,7 +238,7 @@ export default function ProjectDetailPage() {
         overflowX: "hidden",
         paddingTop: "40px",
         position: "relative",
-      }}
+      } as React.CSSProperties}
     >
       {/* MOBILE HEADER - 3 Titik Ngambang & Freeze (Hanya di HP) */}
       <div className="project-mobile-header">

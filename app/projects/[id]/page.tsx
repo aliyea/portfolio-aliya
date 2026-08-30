@@ -112,12 +112,11 @@ body {
 /* KHUSUS HP (Layar di bawah 768px) */
 @media (max-width: 768px) {
   .project-wrapper {
-    /* FIX: Matikan gambar background asli biar gak ditarik sama browser HP */
     background-image: none !important; 
+    background-color: transparent !important;
   }
 
-  /* Bikin layer background fiktif di belakang layar khusus HP. Ukurannya dikunci pas 1 layar (100vh) */
-  .project-wrapper::before {
+.project-wrapper::before {
     content: "";
     position: fixed;
     top: 0;

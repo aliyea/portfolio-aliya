@@ -458,7 +458,7 @@ export default function AboutPage() {
             </p>
             
             <p style={{ margin: 0 }}>
-             Her experience spans requirements analysis, system documentation, software testing, and web development. She enjoys understanding how a system works, translating user and business needs into clear requirements, and making sure the final product functions as intended.
+             Her experience spans requirements analysis, system design, UI/UX, software testing, and full-stack web development. She enjoys understanding how people interact with systems, turning ideas and user needs into clear solutions, and bringing those solutions to life through functional and intuitive digital products.
             </p>
             
             <p style={{ margin: 0 }}>

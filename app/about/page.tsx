@@ -454,7 +454,7 @@ export default function AboutPage() {
             }}
           >
             <p style={{ margin: 0 }}>
-              Aliya Raihana is a <strong>Software Engineering graduate</strong> based in Jakarta, Indonesia, with an interest in <strong>software testing, system analysis, and digital product development.</strong>
+              Aliya Raihana is a <strong>Software Engineering graduate</strong> based in Jakarta, Indonesia, with an interest in <strong>digital product development, UI/UX design, and web development.</strong>
             </p>
             
             <p style={{ margin: 0 }}>
@@ -466,7 +466,7 @@ export default function AboutPage() {
             </p>
             
             <p style={{ margin: 0 }}>
-              She is currently exploring opportunities in QA, Software Testing, SDET, and IT Business Analysis, particularly roles that involve problem-solving, understanding systems, and improving the quality of digital products.
+              She is currently exploring opportunities across Product Design, UI/UX, Frontend Development, Full-stack Development, and related digital product roles—particularly positions where she can combine technical thinking, creativity, and a user-focused approach to build better digital experiences.
             </p>
           </div>
 
